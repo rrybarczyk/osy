@@ -35,7 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
-*.bin
+bootcode.bin
 *.img
 
 # Debug files
@@ -113,7 +113,7 @@ Temporary Items
 
 # Build directories
 build/
-/files/
+files/firmware
 
 # Submission files
-*.tar.gz
+# *.tar.gz
