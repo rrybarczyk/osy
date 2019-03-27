@@ -13,7 +13,11 @@ Phase 3 and 4 from Assignment 1 from the [CS140 course](https://cs140e.sergio.bz
 
 ## Rust Versioning
 ```
+$ rustup install nightly-2018-01-09
+$ rustup default nightly-2018-01-09
 $ rustup override set nightly-2018-01-09
+$ rustup component add rust-src
+
 $ cargo install xargo --version 0.3.10
 
 $ rustc --version
