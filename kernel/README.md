@@ -4,4 +4,7 @@ Phase 3 of Assignment 1 from the [CS140 course](https://cs140e.sergio.bz/assignm
 The main OS kernel.
 
 ## `blinky` branch
-Tests system timer in `pi::timer` to blink LED.
+Uses `Timer` in `pi::timer` to blink LED.
+
+## `gpio` branch
+Uses `Timer` in `pi::timer` and `Gpio` in `pi::gpio` to blink LED.

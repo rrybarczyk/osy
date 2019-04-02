@@ -4,7 +4,7 @@ Phase 3 and 4 from Assignment 1 from the [CS140 course](https://cs140e.sergio.bz
 ## Phase 3: *Not* a Seashell
 - [x] Subphase A: Getting Started
 - [x] Subphase B: System Timer
-- [ ] Subphase C: GPIO
+- [x] Subphase C: GPIO
 - [ ] Subphase D: UART
 - [ ] Subphase E: The Shell
      

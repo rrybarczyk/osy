@@ -27,21 +27,12 @@ const GPIO_CLR0: *mut u32 = (GPIO_BASE + 0x28) as *mut u32;
 #[no_mangle]
 pub extern "C" fn kmain() {
     let pin = 16;
-    let shift = (pin % 10) * 3;
-    unsafe {
-        GPIO_FSEL1.write_volatile(GPIO_FSEL1.read_volatile() & !(0b111 << shift));
-        GPIO_FSEL1.write_volatile(GPIO_FSEL1.read_volatile() | (0b001 << shift));
+    let mut gpio16 = pi::gpio::Gpio::new(pin).into_output();
 
-        // FIXME: STEP 2: Continuously set and clear GPIO 16.
-        loop {
-            GPIO_SET0.write_volatile(GPIO_SET0.read_volatile() & !(0b1 << pin));
-            GPIO_SET0.write_volatile(GPIO_SET0.read_volatile() | (0b1 << pin));
-            // spin_sleep_ms(500);
-            pi::timer::spin_sleep_ms(5000);
-            GPIO_CLR0.write_volatile(GPIO_CLR0.read_volatile() & !(0b1 << pin));
-            GPIO_CLR0.write_volatile(GPIO_CLR0.read_volatile() | (0b1 << pin));
-            pi::timer::spin_sleep_ms(5000);
-            // spin_sleep_ms(500);
-        }
+    loop {
+        gpio16.set();
+        pi::timer::spin_sleep_ms(2000);
+        gpio16.clear();
+        pi::timer::spin_sleep_ms(2000);
     }
 }
