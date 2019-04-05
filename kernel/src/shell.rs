@@ -5,7 +5,8 @@ use console::{kprint, kprintln, CONSOLE};
 #[derive(Debug)]
 enum Error {
     Empty,
-    TooManyArgs
+    TooManyArgs,
+    ParseError,
 }
 
 /// A structure representing a single shell command.
@@ -36,12 +37,28 @@ impl<'a> Command<'a> {
 
     /// Returns this command's path. This is equivalent to the first argument.
     fn path(&self) -> &str {
-        unimplemented!()
+        self.args[0]
     }
+}
+
+fn line_read(buf: &mut[u8]) -> Result<&str, Error> {
+    unimplemented!();
 }
 
 /// Starts a shell using `prefix` as the prefix for each line. This function
 /// never returns: it is perpetually in a shell loop.
 pub fn shell(prefix: &str) -> ! {
-    unimplemented!()
+    unimplemented!();
+    // // Loop for each executed command. Execution is signaled by CR or NL
+    // 'outer: loop {
+    //     let mut buf = [0u8; 512];                   // Max cmd len is 512 bytes
+    //     let mut cmd_stack = StackVec::new(&mut buf);    // Initialize cmd stack
+    //
+    //     kprint!("{}", prefix);                      // Print console prefix
+    //
+    //     let parsed_cmd = match line_read(cmd_stack.as_mut_slice()) {
+    //         Ok(s) => Command::parse(s, &mut[""; 64]),
+    //         Err(_) => Err(Error::ParseError),
+    //     };
+    // }
 }
