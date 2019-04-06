@@ -42,15 +42,15 @@ fn blinky(pin: u8, interval: u64) {
 /// Test uart driver
 fn echo() {
     let mut mu = pi::uart::MiniUart::new();
-    mu.write_str("hello world");
+    mu.write_str("hello world").expect("write str err");
     mu.set_read_timeout(10000);
     loop {
-        mu.write_str("$ ");
+        mu.write_str("$ ").expect("write str err");;
         let mut buf = [0u8; 1];
         match mu.read(&mut buf) {
             Ok(n) => {
-                mu.write(&buf[0..n]);
-                mu.write_str("\n").unwrap();
+                mu.write(&buf[0..n]).expect("write err");
+                mu.write_str("\n").expect("write str err");;
             },
             Err(_) => mu.write_str("you took to long").unwrap(),
         };
@@ -60,5 +60,6 @@ fn echo() {
 #[no_mangle]
 pub extern "C" fn kmain() {
     blinky(16, 1000);
-    echo();
+    shell::shell("$ ");
+    // echo();
 }
