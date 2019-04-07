@@ -5,8 +5,8 @@ Phase 3 and 4 from Assignment 1 from the [CS140 course](https://cs140e.sergio.bz
 - [x] Subphase A: Getting Started
 - [x] Subphase B: System Timer
 - [x] Subphase C: GPIO
-- [ ] Subphase D: UART
-- [ ] Subphase E: The Shell
+- [x] Subphase D: UART
+- [x] Subphase E: The Shell
      
 ## Phase 4: Boot 'em Up
 
@@ -27,4 +27,3 @@ $ xargo --version
 xargo 0.3.10
 cargo 0.25.0-nightly (a88fbace4 2017-12-29)
 ```
-
