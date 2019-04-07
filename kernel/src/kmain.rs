@@ -29,12 +29,12 @@ use std::io::{Write, Read };
 
 /// Test system timer and gpio driver
 fn blinky(pin: u8, interval: u64) {
-    let mut gpio16 = pi::gpio::Gpio::new(pin).into_output();
+    let mut gpiopin = pi::gpio::Gpio::new(pin).into_output();
 
-    loop {
-        gpio16.set();
+    for _ in 0..10 {
+        gpiopin.set();
         pi::timer::spin_sleep_ms(interval);
-        gpio16.clear();
+        gpiopin.clear();
         pi::timer::spin_sleep_ms(interval);
     }
 }
@@ -42,15 +42,15 @@ fn blinky(pin: u8, interval: u64) {
 /// Test uart driver
 fn echo() {
     let mut mu = pi::uart::MiniUart::new();
-    mu.write_str("hello world");
+    mu.write_str("hello world").expect("write str err");
     mu.set_read_timeout(10000);
     loop {
-        mu.write_str("$ ");
-        let mut buf = [0u8; 8];
+        mu.write_str("$ ").expect("write str err");;
+        let mut buf = [0u8; 1];
         match mu.read(&mut buf) {
             Ok(n) => {
-                mu.write(&buf[0..n]);
-                mu.write_str("\n").unwrap();
+                mu.write(&buf[0..n]).expect("write err");
+                mu.write_str("\n").expect("write str err");;
             },
             Err(_) => mu.write_str("you took to long").unwrap(),
         };
@@ -59,5 +59,7 @@ fn echo() {
 
 #[no_mangle]
 pub extern "C" fn kmain() {
-    echo();
+    blinky(16, 1000);
+    shell::shell("$ ");
+    // echo();
 }

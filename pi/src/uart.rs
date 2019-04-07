@@ -128,7 +128,7 @@ impl MiniUart {
     pub fn wait_for_byte(&self) -> Result<(), ()> {
         match self.timeout {
             Some(t) => {
-                let stop_time = (t as u64) + timer::current_time();
+                let stop_time = (t as u64) * 1000 + timer::current_time();
                 loop {
                     if self.has_byte() { return Ok(()) }
                     if stop_time <= timer::current_time() { return Err(()) }
