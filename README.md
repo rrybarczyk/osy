@@ -9,7 +9,7 @@ Phase 3 and 4 from Assignment 1 from the [CS140 course](https://cs140e.sergio.bz
 - [x] Subphase E: The Shell
      
 ## Phase 4: Boot 'em Up
-
+Accepts xmodem file transfers over mini uart.
 
 ## Rust Versioning
 ```
