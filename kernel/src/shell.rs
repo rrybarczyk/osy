@@ -1,5 +1,6 @@
 use std::str;
 use std::io::Write;
+use std::fmt::Write as FmtWrite;
 use stack_vec::StackVec;
 use console::{kprint, kprintln, CONSOLE};
 
@@ -46,21 +47,6 @@ impl<'a> Command<'a> {
 /// Starts a shell using `prefix` as the prefix for each line. This function
 /// never returns: it is perpetually in a shell loop.
 pub fn shell(prefix: &str) -> ! {
-    // \r, \n are ENTER
-    // ASCII 8 and 127 are backspace and delete which erase a single char
-    // if invalid ASCII -> ring BELL
-    // receive a stream of incoming bytes
-    // as each byte is received, check its value
-    // if it if a valid value, put it on the stack
-    // if it is an invalid value right BELL and do not change the stack
-    // if it is a backspace/del, remove last item on the stack
-    // send final stack array to the parse fun as a string slice
-    // get back a Command with args arg
-    // look at first arg, if echo then call echo and pass in remaining parameters
-    // if not echo, then print"unknown command"
-
-    // unimplemented!();
-
     const BEL: u8   = 0x7;      // Bell
     const BS: u8    = 0x8;      // Backspace
     const DEL: u8   = 0x7F;     // Delete
@@ -85,16 +71,12 @@ pub fn shell(prefix: &str) -> ! {
                 continue;
             } 
 
-            // If backspace or delete char received. Pop last char off stack.
-            // Rings bell if stack is empty.
-            // If line feed or carriage return char received, cmd finished. Send stack buf to be parsed
-            // If valid char received. Push to stack and print to screen
-            // Rings bell if stack is full
             if input == BS || input == DEL {
                 // Backspace or delete received
+                // Pop last char off stack, ring bell if empty
                 match stack.pop() {
                     Some(_) => {
-                        console.write(&[BS, b' ', BS]).expect("ehh");
+                        console.write(&[BS, b' ', BS]).expect("Backspace write fail");
                     },
                     None => {
                         console.write_byte(BEL);    //  Empty stack, ring bell
@@ -102,12 +84,24 @@ pub fn shell(prefix: &str) -> ! {
                 };
 
             } else if input == LF || input == CR {
-                // Line feed or carriage return received
+                // Line feed or carriage return char received, cmd finished
+                // Send stack buf to be parsed
                 let mut cmd_buf: [&str; 64] = [""; 64];
 
                 // Parse completed command
                 match Command::parse(str::from_utf8(stack.into_slice()).unwrap(), &mut cmd_buf) {
-                    Ok(_cmd) => {
+                    Ok(cmd) => {
+                        match cmd.path() {
+                            "echo" => 
+                            {
+                                console.write_str("echo").unwrap();
+                                console.write_byte(LF);
+                                console.write_byte(CR);
+                            },
+                            _ => {
+                                console.write_str("unknown command").unwrap();
+                            }
+                        };
                         console.write_byte(LF);
                         console.write_byte(CR);
                         continue 'cmd;      // Command parsed, continue to 'cmd loop to start new command
@@ -124,8 +118,10 @@ pub fn shell(prefix: &str) -> ! {
                         break 'arg;
                     },
                 }
+
             } else {
-                // Char in command received, push to stack and write to screen
+                // Char in command received
+                // Push to stack and write to screen, ring bell if stack is full
                 match stack.push(input) {
                     Ok(_) => console.write_byte(input),
                     Err(_) => console.write_byte(BEL),
